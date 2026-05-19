@@ -1,0 +1,20 @@
+[package]
+name = "ba2-plus-desktop"
+version = "2.0.0"
+description = "BA II Plus Financial Calculator"
+authors = ["freshtemp-labs"]
+edition = "2021"
+
+[lib]
+name = "ba2_plus_desktop_lib"
+crate-type = ["lib", "cdylib", "staticlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-clipboard-manager = "2"
+tauri-plugin-shell = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"

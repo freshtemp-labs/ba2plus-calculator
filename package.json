@@ -1,0 +1,24 @@
+{
+  "name": "ba2-plus-calculator",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "BA II Plus Financial Calculator — iOS/Android/Desktop",
+  "scripts": {
+    "dev:web": "cd apps/web && npx vite",
+    "build:web": "cd apps/web && npx vite build",
+    "dev:mobile": "cd apps/mobile && npx cap sync && npx cap run",
+    "build:ios": "cd apps/mobile && npm run build && npx cap sync ios",
+    "build:android": "cd apps/mobile && npm run build && npx cap sync android",
+    "build:desktop": "cd apps/desktop && npx tauri build",
+    "test": "node tests/cfa-test-runner.js",
+    "test:report": "node tests/cfa-test-runner.js --report",
+    "lint": "npx eslint packages/ apps/",
+    "format": "npx prettier --write packages/ apps/"
+  },
+  "workspaces": ["packages/*", "apps/*"],
+  "devDependencies": {
+    "eslint": "^9.0.0",
+    "prettier": "^3.0.0"
+  }
+}

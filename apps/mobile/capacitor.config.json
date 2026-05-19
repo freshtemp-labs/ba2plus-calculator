@@ -1,0 +1,23 @@
+{
+  "appId": "com.freshtemplabs.ba2plus",
+  "appName": "BA II Plus Calculator",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "plugins": {
+    "Haptics": { "enabled": true },
+    "Clipboard": { "enabled": true },
+    "SplashScreen": {
+      "launchShowDuration": 500,
+      "backgroundColor": "#1a1a2e",
+      "androidSplashResourceName": "splash"
+    },
+    "StatusBar": {
+      "style": "DARK",
+      "backgroundColor": "#1a1a2e"
+    }
+  },
+  "server": {
+    "iosScheme": "ba2plus",
+    "androidScheme": "ba2plus"
+  }
+}

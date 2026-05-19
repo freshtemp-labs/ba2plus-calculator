@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>CFA Test Report — BA II Plus Calculator</title>
+<style>body{font-family:sans-serif;background:#111;color:#ddd;padding:20px}h1{color:#d4a017}.summary{font-size:18px;margin:20px 0}table{width:100%;border-collapse:collapse}th,td{padding:8px 12px;text-align:left;border-bottom:1px solid #333}th{color:#d4a017;font-size:12px;text-transform:uppercase}.pass{color:#0a0}.fail{color:#a00}</style></head>
+<body><h1>BA II Plus Calculator — CFA Test Report</h1>
+<div class="summary">Passed: <span class="pass">27/27</span> (100.0%)</div>
+<table><thead><tr><th>Status</th><th>Test</th><th>Result</th></tr></thead><tbody><tr><td><span style="color:#0a0">✓ PASS</span></td><td>TVM1: FV from PV (N=10, I/Y=8, PV=-1000)</td><td>2158.924997272788</td></tr>
+<tr><td><span style="color:#0a0">✓ PASS</span></td><td>TVM2: PMT (N=5, I/Y=10, PV=-1000, FV=1500)</td><td>18.101259602627398</td></tr>
+<tr><td><span style="color:#0a0">✓ PASS</span></td><td>TVM3: Mortgage PMT (N=30yr, I/Y=6, PV=200000, P/Y=12)</td><td>-1199.1010503055138</td></tr>
+<tr><td><span style="color:#0a0">✓ PASS</span></td><td>TVM4: Solve I/Y (N=5, PV=-10000, FV=15000)</td><td>8.447177119769858</td></tr>
+<tr><td><span style="color:#0a0">✓ PASS</span></td><td>TVM5: Solve N (I/Y=10, PV=-1000, FV=2000)</td><td>7.272540897341713</td></tr>
+<tr><td><span style="color:#0a0">✓ PASS</span></td><td>TVM6: BGN mode PV (N=10, I/Y=8, PMT=100)</td><td>-724.6887910856764</td></tr>
+<tr><td><span style="color:#0a0">✓ PASS</span></td><td>Bond1: Discount bond price (6% coupon, 8% YTM, 10yr)</td><td>865.7983720211706</td></tr>
+<tr><td><span style="color:#0a0">✓ PASS</span></td><td>Bond2: Premium bond price (8% coupon, 6% YTM, 5yr)</td><td>1084.2472757113142</td></tr>
+<tr><td><span style="color:#0a0">✓ PASS</span></td><td>Bond3: Par bond (coupon=YTM=5%)</td><td>999.9999999999997</td></tr>
+<tr><td><span style="color:#0a0">✓ PASS</span></td><td>Bond4: Semi-annual bond (6% coupon, 8% YTM, 10yr)</td><td>864.0967365503227</td></tr>
+<tr><td><span style="color:#0a0">✓ PASS</span></td><td>CF1: NPV (-10000, +3000, +4000, +5000, +2000 @10%)</td><td>1155.6587664776973</td></tr>
+<tr><td><span style="color:#0a0">✓ PASS</span></td><td>CF2: IRR (-10000, +3000, +4000, +5000, +2000)</td><td>15.322137877181547</td></tr>
+<tr><td><span style="color:#0a0">✓ PASS</span></td><td>CF3: NPV with frequencies (-100, +30x5 @10%)</td><td>13.723603082253419</td></tr>
+<tr><td><span style="color:#0a0">✓ PASS</span></td><td>Depr1: SL (cost=10000, salvage=2000, life=5)</td><td>1600</td></tr>
+<tr><td><span style="color:#0a0">✓ PASS</span></td><td>Depr2: DB Year 1 (cost=10000, salvage=1000, life=5)</td><td>4000</td></tr>
+<tr><td><span style="color:#0a0">✓ PASS</span></td><td>Depr3: SYD Year 1 (cost=10000, salvage=1000, life=5)</td><td>3000</td></tr>
+<tr><td><span style="color:#0a0">✓ PASS</span></td><td>Stat1: Mean of [1,2,3,4,5] = 3</td><td>3</td></tr>
+<tr><td><span style="color:#0a0">✓ PASS</span></td><td>Stat2: Sample std dev of [1,2,3,4,5] ≈ 1.58</td><td>1.5811388300841898</td></tr>
+<tr><td><span style="color:#0a0">✓ PASS</span></td><td>Stat3: Correlation r of (1,2),(2,4),(3,6) = 1.0</td><td>1</td></tr>
+<tr><td><span style="color:#0a0">✓ PASS</span></td><td>Stat4: Slope of (1,2),(2,4),(3,6) = 2.0</td><td>2</td></tr>
+<tr><td><span style="color:#0a0">✓ PASS</span></td><td>Basic1: 100 + 200 = 300</td><td>300</td></tr>
+<tr><td><span style="color:#0a0">✓ PASS</span></td><td>Basic2: 12 * 12 = 144</td><td>144</td></tr>
+<tr><td><span style="color:#0a0">✓ PASS</span></td><td>Basic3: 144 / 12 = 12</td><td>12</td></tr>
+<tr><td><span style="color:#0a0">✓ PASS</span></td><td>Iconv1: NOM=12%, C/Y=12 → EFF≈12.68%</td><td>12.682503013196978</td></tr>
+<tr><td><span style="color:#0a0">✓ PASS</span></td><td>Iconv2: EFF=12.68%, C/Y=12 → NOM≈12.00%</td><td>11.997756467064846</td></tr>
+<tr><td><span style="color:#0a0">✓ PASS</span></td><td>Date1: ACT days Jan 1 - Dec 31, 2024 = 365</td><td>365</td></tr>
+<tr><td><span style="color:#0a0">✓ PASS</span></td><td>Date2: 30/360 days Jan 1 - Jun 15, 2024 = 164</td><td>164</td></tr></tbody></table>
+<p style="margin-top:20px;color:#666;font-size:11px">Generated: 2026-05-19T16:56:30.020Z | Platform: All (iOS/Android/Desktop/Web)</p>
+</body></html>

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>BA II Plus Calculator</title>
+<link rel="stylesheet" href="../../packages/ui/styles.css">
+</head>
+<body>
+<div class="calculator" id="calc">
+  <div class="badge">
+    <span>BA II Plus™</span>
+    <button class="btn-toggle" id="shortcutToggle" onclick="toggleShortcuts()">⌨ 快捷键</button>
+  </div>
+  <div class="display">
+    <div class="mode-indicator" id="modeIndicator">FIN</div>
+    <div class="label-line" id="labelLine">&nbsp;</div>
+    <div class="value-line" id="valueLine">0</div>
+    <div class="sub-line" id="subLine">&nbsp;</div>
+  </div>
+  <div class="mode-tabs">
+    <button class="mode-tab active" data-mode="basic" onclick="switchMode('basic')">标准</button>
+    <button class="mode-tab" data-mode="tvm" onclick="switchMode('tvm')">TVM</button>
+    <button class="mode-tab" data-mode="cashflow" onclick="switchMode('cashflow')">现金流</button>
+    <button class="mode-tab" data-mode="bond" onclick="switchMode('bond')">债券</button>
+    <button class="mode-tab" data-mode="depr" onclick="switchMode('depr')">折旧</button>
+    <button class="mode-tab" data-mode="iconv" onclick="switchMode('iconv')">利率转换</button>
+    <button class="mode-tab" data-mode="date" onclick="switchMode('date')">日期</button>
+    <button class="mode-tab" data-mode="stat" onclick="switchMode('stat')">统计</button>
+  </div>
+  <!-- Basic Mode -->
+  <div class="keys active" id="keys-basic">
+    <div class="key-row">
+      <button class="key key-fn2" onclick="press('CLEAR')">CE/C</button>
+      <button class="key key-fn2" onclick="press('BACK')">←</button>
+      <button class="key key-fn" onclick="press('MEM')"><span class="sub">STO</span>MEM</button>
+      <button class="key key-fn" onclick="press('RCL')">RCL</button>
+      <button class="key key-fn" onclick="press('FORMAT')"><span class="sub">2ND</span>FMT</button>
+    </div>
+    <div class="key-row">
+      <button class="key key-fn" onclick="press('N')"><span class="sub">N</span>N</button>
+      <button class="key key-fn" onclick="press('IY')"><span class="sub">I/Y</span>I/Y</button>
+      <button class="key key-fn" onclick="press('PV')"><span class="sub">PV</span>PV</button>
+      <button class="key key-fn" onclick="press('PMT')"><span class="sub">PMT</span>PMT</button>
+      <button class="key key-fn" onclick="press('FV')"><span class="sub">FV</span>FV</button>
+    </div>
+    <div class="key-row">
+      <button class="key key-num" onclick="press('7')">7</button>
+      <button class="key key-num" onclick="press('8')">8</button>
+      <button class="key key-num" onclick="press('9')">9</button>
+      <button class="key key-op" onclick="press('DIV')">÷</button>
+      <button class="key key-fn" onclick="press('CPT')"><span class="sub">CPT</span>CPT</button>
+    </div>
+    <div class="key-row">
+      <button class="key key-num" onclick="press('4')">4</button>
+      <button class="key key-num" onclick="press('5')">5</button>
+      <button class="key key-num" onclick="press('6')">6</button>
+      <button class="key key-op" onclick="press('MUL')">×</button>
+      <button class="key key-eq" onclick="press('ENTER')"><span class="sub">ENTER</span>=</button>
+    </div>
+    <div class="key-row">
+      <button class="key key-num" onclick="press('1')">1</button>
+      <button class="key key-num" onclick="press('2')">2</button>
+      <button class="key key-num" onclick="press('3')">3</button>
+      <button class="key key-op" onclick="press('SUB')">−</button>
+      <button class="key key-fn2" onclick="press('NEG')">±</button>
+    </div>
+    <div class="key-row">
+      <button class="key key-num key-wide" onclick="press('0')">0</button>
+      <button class="key key-num" onclick="press('.')">.</button>
+      <button class="key key-op" onclick="press('ADD')">+</button>
+      <button class="key key-ce" onclick="press('QUIT')"><span class="sub">QUIT</span>OFF</button>
+    </div>
+  </div>
+  <!-- TVM Mode -->
+  <div class="keys" id="keys-tvm">
+    <div class="key-row">
+      <button class="key key-fn" onclick="pressTVM('N')">N <span style="font-size:10px;opacity:0.6">(期数)</span></button>
+      <button class="key key-fn" onclick="pressTVM('IY')">I/Y <span style="font-size:10px;opacity:0.6">(利率%)</span></button>
+    </div>
+    <div class="key-row">
+      <button class="key key-fn" onclick="pressTVM('PV')">PV <span style="font-size:10px;opacity:0.6">(现值)</span></button>
+      <button class="key key-fn" onclick="pressTVM('PMT')">PMT <span style="font-size:10px;opacity:0.6">(每期支付)</span></button>
+      <button class="key key-fn" onclick="pressTVM('FV')">FV <span style="font-size:10px;opacity:0.6">(终值)</span></button>
+    </div>
+    <div class="key-row">
+      <button class="key key-fn2" onclick="pressTVM('CLR_TVM')">CLR TVM</button>
+      <button class="key key-eq key-wide" onclick="pressTVM('SOLVE_PV')">▶ 求 PV</button>
+    </div>
+    <div class="key-row">
+      <button class="key key-eq" onclick="pressTVM('SOLVE_FV')">▶ 求 FV</button>
+      <button class="key key-eq" onclick="pressTVM('SOLVE_PMT')">▶ 求 PMT</button>
+      <button class="key key-eq" onclick="pressTVM('SOLVE_N')">▶ 求 N</button>
+      <button class="key key-eq" onclick="pressTVM('SOLVE_IY')">▶ 求 I/Y</button>
+    </div>
+    <div class="key-row" style="margin-top:6px">
+      <button class="key key-fn2" onclick="pressTVM('BGN_TOGGLE')" id="bgnBtn">END <span style="font-size:9px">(到期)</span></button>
+      <button class="key key-fn2" onclick="pressTVM('P_YR')" id="pyrBtn">P/Y=12</button>
+      <button class="key key-fn2" onclick="switchMode('basic')">← 返回</button>
+    </div>
+  </div>
+  <!-- Cash Flow Mode -->
+  <div class="keys" id="keys-cashflow">
+    <div class="key-row">
+      <button class="key key-fn" onclick="pressCF('CF0')">CF₀ <span style="font-size:9px;opacity:0.6">(初始)</span></button>
+      <button class="key key-fn" onclick="pressCF('CF')">+CF <span style="font-size:9px;opacity:0.6">(添加)</span></button>
+      <button class="key key-fn2" onclick="pressCF('FREQ')">F01-F0n <span style="font-size:9px;opacity:0.6">(次数)</span></button>
+    </div>
+    <div class="key-row">
+      <button class="key key-fn2" onclick="pressCF('DELETE')">删除末行</button>
+      <button class="key key-ce" onclick="pressCF('CLEAR')">清空</button>
+      <button class="key key-eq" onclick="pressCF('NPV')">▶ NPV</button>
+      <button class="key key-eq" onclick="pressCF('IRR')">▶ IRR</button>
+    </div>
+    <div class="key-row">
+      <button class="key key-fn2" onclick="setCFRate()">折现率 %</button>
+      <button class="key key-fn2" onclick="switchMode('basic')">← 返回</button>
+    </div>
+    <div style="margin-top:6px;color:#888;font-size:11px;padding:4px;line-height:1.5">
+      <span id="cfCount">0</span> 行  |  折现率: <span id="cfRate">10</span>%  |  总 <span id="cfTotalPeriods">0</span> 期
+    </div>
+  </div>
+  <!-- Bond Mode -->
+  <div class="keys" id="keys-bond">
+    <div class="key-row">
+      <button class="key key-fn" onclick="pressBond('SET_FV')">面值 <span style="font-size:9px;opacity:0.6">(默认1000)</span></button>
+      <button class="key key-fn" onclick="pressBond('SET_CPN')">票息 %</button>
+      <button class="key key-fn" onclick="pressBond('SET_YLD')">收益率 %</button>
+      <button class="key key-fn" onclick="pressBond('SET_N')">期限(年)</button>
+    </div>
+    <div class="key-row">
+      <button class="key key-fn" onclick="pressBond('SET_PRICE')">输入价格</button>
+      <button class="key key-fn2" onclick="pressBond('SET_PA')">年付</button>
+      <button class="key key-fn2" onclick="pressBond('SET_SA')">半年付</button>
+      <button class="key key-eq" onclick="pressBond('PRICE')">▶ 求价格</button>
+      <button class="key key-eq" onclick="pressBond('YTM')">▶ 求YTM</button>
+    </div>
+    <div class="key-row">
+      <button class="key key-fn2" onclick="pressBond('CLEAR')">清空</button>
+      <button class="key key-fn2" onclick="switchMode('basic')">← 返回</button>
+    </div>
+  </div>
+  <!-- Depreciation Mode -->
+  <div class="keys" id="keys-depr">
+    <div class="key-row">
+      <button class="key key-fn" onclick="pressDepr('COST')">成本</button>
+      <button class="key key-fn" onclick="pressDepr('SALV')">残值</button>
+      <button class="key key-fn" onclick="pressDepr('LIFE')">年限</button>
+      <button class="key key-fn" onclick="pressDepr('YEAR')">第N年</button>
+    </div>
+    <div class="key-row">
+      <button class="key key-fn2" onclick="pressDepr('SL')">直线法(SL)</button>
+      <button class="key key-fn2" onclick="pressDepr('SYD')">年数总和(SYD)</button>
+      <button class="key key-fn2" onclick="pressDepr('DB')">余额递减(DB)</button>
+    </div>
+    <div class="key-row">
+      <button class="key key-fn2" onclick="pressDepr('CLEAR')">清空</button>
+      <button class="key key-fn2" onclick="switchMode('basic')">← 返回</button>
+    </div>
+  </div>
+  <!-- ICONV Mode -->
+  <div class="keys" id="keys-iconv">
+    <div class="key-row">
+      <button class="key key-fn" onclick="pressIconv('NOM')">名义利率(NOM) %</button>
+      <button class="key key-fn" onclick="pressIconv('EFF')">实际利率(EFF) %</button>
+      <button class="key key-fn" onclick="pressIconv('C_Y')">复利次数 C/Y</button>
+    </div>
+    <div class="key-row">
+      <button class="key key-eq" onclick="pressIconv('NOM_TO_EFF')">▶ NOM→EFF</button>
+      <button class="key key-eq" onclick="pressIconv('EFF_TO_NOM')">▶ EFF→NOM</button>
+    </div>
+    <div class="key-row">
+      <button class="key key-fn2" onclick="pressIconv('CLEAR')">清空</button>
+      <button class="key key-fn2" onclick="switchMode('basic')">← 返回</button>
+    </div>
+    <div style="margin-top:6px;color:#888;font-size:11px;padding:4px">
+      <span>NOM=<span id="iconvNom">0</span>%</span> &nbsp;
+      <span>EFF=<span id="iconvEff">0</span>%</span> &nbsp;
+      <span>C/Y=<span id="iconvCY">12</span></span>
+    </div>
+  </div>
+  <!-- Date Mode -->
+  <div class="keys" id="keys-date">
+    <div class="key-row">
+      <button class="key key-fn" onclick="setDate1()">起始日期</button>
+      <button class="key key-fn" onclick="setDate2()">结束日期</button>
+      <button class="key key-fn2" onclick="pressDate('ACT_360')">ACT/360</button>
+      <button class="key key-fn2" onclick="pressDate('ACT_365')">ACT/365</button>
+    </div>
+    <div class="key-row">
+      <button class="key key-fn2" onclick="pressDate('ACT_ACT')">ACT/ACT</button>
+      <button class="key key-fn2" onclick="pressDate('30_360')">30/360</button>
+      <button class="key key-eq key-wide" onclick="pressDate('DAYS')">▶ 天数</button>
+    </div>
+    <div class="key-row">
+      <button class="key key-fn2" onclick="pressDate('CLEAR')">清空</button>
+      <button class="key key-fn2" onclick="switchMode('basic')">← 返回</button>
+    </div>
+    <div style="margin-top:6px;color:#888;font-size:11px;padding:4px;line-height:1.5">
+      <span id="dateDisplay">DT1=—  DT2=—  (ACT/360)</span>
+    </div>
+  </div>
+  <!-- Statistics Mode -->
+  <div class="keys" id="keys-stat">
+    <div class="key-row">
+      <button class="key key-fn2" onclick="pressStat('1VAR')">1-VAR</button>
+      <button class="key key-fn2" onclick="pressStat('2VAR')">2-VAR</button>
+      <span style="flex:1;text-align:center;color:#d4a017;font-size:10px" id="statMode">1VAR</span>
+      <button class="key key-ce" onclick="pressStat('CLEAR')">清空</button>
+    </div>
+    <div class="key-row">
+      <button class="key key-num" onclick="pressStat('7')">7</button>
+      <button class="key key-num" onclick="pressStat('8')">8</button>
+      <button class="key key-num" onclick="pressStat('9')">9</button>
+      <button class="key key-ce" onclick="pressStat('DEL')">DEL</button>
+    </div>
+    <div class="key-row">
+      <button class="key key-num" onclick="pressStat('4')">4</button>
+      <button class="key key-num" onclick="pressStat('5')">5</button>
+      <button class="key key-num" onclick="pressStat('6')">6</button>
+      <button class="key key-fn" onclick="pressStat('N')">N <span style="font-size:9px;opacity:0.6">(个数)</span></button>
+    </div>
+    <div class="key-row">
+      <button class="key key-num" onclick="pressStat('1')">1</button>
+      <button class="key key-num" onclick="pressStat('2')">2</button>
+      <button class="key key-num" onclick="pressStat('3')">3</button>
+      <button class="key key-eq" onclick="pressStat('ENTER')">+=</button>
+    </div>
+    <div class="key-row">
+      <button class="key key-num key-wide" onclick="pressStat('0')">0</button>
+      <button class="key key-num" onclick="pressStat('.')">.</button>
+      <button class="key key-fn2" onclick="pressStat('NEG')">±</button>
+    </div>
+    <div class="key-row">
+      <button class="key key-fn" onclick="pressStat('MEAN')">X̄</button>
+      <button class="key key-fn" onclick="pressStat('STD')">σx</button>
+      <button class="key key-fn" onclick="pressStat('STD_S')">sx</button>
+      <button class="key key-fn" onclick="pressStat('VAR')">σ²</button>
+      <button class="key key-fn" onclick="pressStat('VAR_S')">s²</button>
+    </div>
+    <div class="key-row">
+      <button class="key key-fn" onclick="pressStat('SUM')">Σx</button>
+      <button class="key key-fn" onclick="pressStat('SUMSQ')">Σx²</button>
+      <button class="key key-fn" onclick="pressStat('CORR')">r <span style="font-size:9px;opacity:0.6">(相关)</span></button>
+      <button class="key key-fn" onclick="pressStat('SLOPE')">b₁ <span style="font-size:9px;opacity:0.6">(斜率)</span></button>
+      <button class="key key-fn" onclick="pressStat('INTERCEPT')">b₀ <span style="font-size:9px;opacity:0.6">(截距)</span></button>
+    </div>
+    <div class="key-row">
+      <button class="key key-fn2" onclick="switchMode('basic')">← 返回</button>
+    </div>
+    <div style="margin-top:6px;color:#888;font-size:11px;">
+      <span id="statCount">单变量: 0 点</span>
+    </div>
+  </div>
+  <!-- Shortcuts Panel -->
+  <div class="shortcut-panel" id="shortcutPanel">
+    <h4>⌨ MacBook 快捷键映射</h4>
+    <div class="shortcut-grid">
+      <div class="shortcut-item"><span class="sc-label">数字</span><span class="sc-key">0-9</span></div>
+      <div class="shortcut-item"><span class="sc-label">小数点</span><span class="sc-key">.</span></div>
+      <div class="shortcut-item"><span class="sc-label">± 切换</span><span class="sc-key">N</span></div>
+      <div class="shortcut-item"><span class="sc-label">运算 + − × ÷</span><span class="sc-key">+ - * /</span></div>
+      <div class="shortcut-item"><span class="sc-label">等于 / Enter</span><span class="sc-key">Enter 或 =</span></div>
+      <div class="shortcut-item"><span class="sc-label">退格</span><span class="sc-key">Backspace</span></div>
+      <div class="shortcut-item"><span class="sc-label">清空 (CE/C)</span><span class="sc-key">Esc</span></div>
+      <div class="shortcut-item"><span class="sc-label">TVM 模式</span><span class="sc-key">T</span></div>
+      <div class="shortcut-item"><span class="sc-label">现金流模式</span><span class="sc-key">C</span></div>
+      <div class="shortcut-item"><span class="sc-label">债券模式</span><span class="sc-key">B</span></div>
+      <div class="shortcut-item"><span class="sc-label">折旧模式</span><span class="sc-key">D</span></div>
+      <div class="shortcut-item"><span class="sc-label">利率转换</span><span class="sc-key">I</span></div>
+      <div class="shortcut-item"><span class="sc-label">日期模式</span><span class="sc-key">A</span></div>
+      <div class="shortcut-item"><span class="sc-label">统计模式</span><span class="sc-key">S</span></div>
+      <div class="shortcut-item"><span class="sc-label">标准模式</span><span class="sc-key">Q</span></div>
+      <div class="shortcut-item"><span class="sc-label">TVM: 求 N</span><span class="sc-key">Shift+R</span></div>
+      <div class="shortcut-item"><span class="sc-label">TVM: 求 FV</span><span class="sc-key">Shift+F</span></div>
+      <div class="shortcut-item"><span class="sc-label">TVM: 求 PV</span><span class="sc-key">Shift+P</span></div>
+      <div class="shortcut-item"><span class="sc-label">TVM: 求 PMT</span><span class="sc-key">Shift+M</span></div>
+      <div class="shortcut-item"><span class="sc-label">TVM: 求 I/Y</span><span class="sc-key">Shift+I</span></div>
+      <div class="shortcut-item"><span class="sc-label">切换 BGN/END</span><span class="sc-key">G</span></div>
+    </div>
+  </div>
+</div>
+<script type="module">
+import { calc } from '../../packages/core/index.js';
+import { press } from '../../packages/core/calculator.js';
+import { pressTVM } from '../../packages/core/tvm.js';
+import { pressCF } from '../../packages/core/cashflow.js';
+import { pressBond } from '../../packages/core/bond.js';
+import { pressDepr } from '../../packages/core/depr.js';
+import { pressIconv } from '../../packages/core/iconv.js';
+import { pressDate, parseDate } from '../../packages/core/date.js';
+import { pressStat } from '../../packages/core/stats.js';
+import { switchMode, toggleShortcuts } from '../../packages/core/mode.js';
+import { initKeyboard } from '../../packages/core/keyboard.js';
+
+// Expose functions globally for onclick handlers
+window.press = press;
+window.pressTVM = pressTVM;
+window.pressCF = pressCF;
+window.pressBond = pressBond;
+window.pressDepr = pressDepr;
+window.pressIconv = pressIconv;
+window.pressDate = pressDate;
+window.pressStat = pressStat;
+window.switchMode = switchMode;
+window.toggleShortcuts = toggleShortcuts;
+window.setCFRate = () => {
+  import('../../packages/core/cashflow.js').then(m => {
+    let r = parseFloat(prompt('折现率 (%)：', m.cfState.rate));
+    if (!isNaN(r)) { m.cfState.rate = r; m.updateCFDisplay(); }
+  });
+};
+window.setDate1 = () => {
+  let inp = prompt('起始日期 (YYYY-MM-DD 或 MM/DD/YYYY):', '');
+  if (inp) {
+    let d = parseDate(inp.trim());
+    if (d) { import('../../packages/core/date.js').then(m => { m.dateState.dt1 = d; calc.display = inp.trim(); m.updateDateDisplay(); }); }
+    else calc.display = '格式错误';
+  }
+};
+window.setDate2 = () => {
+  let inp = prompt('结束日期 (YYYY-MM-DD 或 MM/DD/YYYY):', '');
+  if (inp) {
+    let d = parseDate(inp.trim());
+    if (d) { import('../../packages/core/date.js').then(m => { m.dateState.dt2 = d; calc.display = inp.trim(); m.updateDateDisplay(); }); }
+    else calc.display = '格式错误';
+  }
+};
+window.addEventListener('DOMContentLoaded', () => {
+  initKeyboard();
+});
+</script>
+</body>
+</html>
