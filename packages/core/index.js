@@ -1,0 +1,30 @@
+// ===== Shared State & Utilities =====
+
+const calc = {
+  display: '0',
+  buffer: '',
+  memory: 0,
+  op: null,
+  prev: null,
+  newNumber: true,
+  mode: 'basic',
+  label: ''
+};
+
+const $ = id => document.getElementById(id);
+
+function fmt(n) {
+  if (n === undefined || n === null || isNaN(n)) return 'Error';
+  if (typeof n === 'string') return n;
+  if (!isFinite(n)) return '\u221e';
+  if (Math.abs(n) >= 1e9 || (Math.abs(n) < 1e-9 && n !== 0)) return n.toExponential(6);
+  if (Number.isInteger(n) && Math.abs(n) < 1e15) return String(n);
+  return String(parseFloat(n.toFixed(8)));
+}
+
+function fmtDate(d) {
+  if (!d) return '\u2014';
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+export { calc, $, fmt, fmtDate };

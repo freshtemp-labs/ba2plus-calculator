@@ -1,0 +1,23 @@
+{
+  "name": "ba2plus-mobile",
+  "version": "2.0.0",
+  "private": true,
+  "scripts": {
+    "build": "cp -r ../../apps/web/* www/ && echo 'Web assets copied'",
+    "sync": "npx cap sync",
+    "open:ios": "npx cap open ios",
+    "open:android": "npx cap open android",
+    "run:ios": "npx cap run ios",
+    "run:android": "npx cap run android"
+  },
+  "dependencies": {
+    "@capacitor/cli": "^6.0.0",
+    "@capacitor/core": "^6.0.0",
+    "@capacitor/haptics": "^6.0.0",
+    "@capacitor/clipboard": "^6.0.0",
+    "@capacitor/splash-screen": "^6.0.0",
+    "@capacitor/status-bar": "^6.0.0",
+    "@capacitor/ios": "^6.0.0",
+    "@capacitor/android": "^6.0.0"
+  }
+}
