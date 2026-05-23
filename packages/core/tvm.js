@@ -54,7 +54,7 @@ function solveTVM(target) {
         if (x < -0.9999) x = -0.5;
         if (isNaN(x) || !isFinite(x)) return NaN;
       }
-      return x / (tvm.pyr || 1) * 100;
+      return x * (tvm.pyr || 1) * 100;
     }
   }
 }

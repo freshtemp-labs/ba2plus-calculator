@@ -63,6 +63,11 @@ function initKeyboard() {
     if (mk === 'i') { e.preventDefault(); switchMode('iconv'); updateIconvDisplay(); return; }
     if (mk === 'a') { e.preventDefault(); switchMode('date'); updateDateDisplay(); return; }
     if (mk === 's') { e.preventDefault(); switchMode('stat'); updateStatDisplay(); return; }
+    // TVM variable entry (only in TVM mode)
+    if (calc.mode === 'tvm') {
+      const tvmVars = {n:'N', i:'IY', p:'PV', m:'PMT', f:'FV'};
+      if (tvmVars[mk]) { e.preventDefault(); pressTVM(tvmVars[mk]); return; }
+    }
     if (e.shiftKey && calc.mode === 'tvm') {
       const solve = {P:'SOLVE_PV',F:'SOLVE_FV',M:'SOLVE_PMT',R:'SOLVE_N',I:'SOLVE_IY'};
       if (solve[key]) { e.preventDefault(); pressTVM(solve[key]); return; }
