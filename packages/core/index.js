@@ -14,9 +14,10 @@ const calc = {
 const $ = id => document.getElementById(id);
 
 function fmt(n) {
-  if (n === undefined || n === null || isNaN(n)) return 'Error';
+  if (n === undefined || n === null) return 'Error';
   if (typeof n === 'string') return n;
-  if (!isFinite(n)) return '\u221e';
+  if (isNaN(n)) return 'Error';
+  if (!isFinite(n)) return '∞';
   if (Math.abs(n) >= 1e15) return n.toExponential(6);
   if (Number.isInteger(n) && Math.abs(n) < 1e15) return String(n);
   if (Math.abs(n) >= 1e-8) return String(parseFloat(n.toFixed(8)));
