@@ -1,0 +1,41 @@
+name: iOS Build
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - run: npm ci
+      - name: Install mobile deps
+        run: cd apps/mobile && npm ci
+      - name: Build + sync Capacitor iOS
+        run: npm run build:ios
+      - name: Build iOS (simulator, unsigned)
+        run: |
+          cd apps/mobile/ios/App
+          xcodebuild \
+            -workspace App.xcworkspace \
+            -scheme App \
+            -sdk iphonesimulator \
+            -configuration Debug \
+            build \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ba2-plus-ios-simulator-build
+          path: |
+            apps/mobile/ios/App/build/
+      - name: TestFlight notice
+        run: |
+          echo "::notice::iOS build validation passed. TestFlight upload requires an Apple Developer account and distribution certificates. Configure secrets and add a deploy step to automate TestFlight delivery."

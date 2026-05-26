@@ -1,6 +1,12 @@
 # BA II Plus Financial Calculator
 
-A web-based Texas Instruments BA II Plus financial calculator emulator, built as a single HTML file with zero dependencies.
+[![CI](https://github.com/freshtemp-labs/ba2plus-calculator/actions/workflows/ci.yml/badge.svg)](https://github.com/freshtemp-labs/ba2plus-calculator/actions/workflows/ci.yml)
+[![Web Deploy](https://github.com/freshtemp-labs/ba2plus-calculator/actions/workflows/web-deploy.yml/badge.svg)](https://github.com/freshtemp-labs/ba2plus-calculator/actions/workflows/web-deploy.yml)
+[![Android Build](https://github.com/freshtemp-labs/ba2plus-calculator/actions/workflows/android-build.yml/badge.svg)](https://github.com/freshtemp-labs/ba2plus-calculator/actions/workflows/android-build.yml)
+[![iOS Build](https://github.com/freshtemp-labs/ba2plus-calculator/actions/workflows/ios-build.yml/badge.svg)](https://github.com/freshtemp-labs/ba2plus-calculator/actions/workflows/ios-build.yml)
+[![Desktop Build](https://github.com/freshtemp-labs/ba2plus-calculator/actions/workflows/desktop-build.yml/badge.svg)](https://github.com/freshtemp-labs/ba2plus-calculator/actions/workflows/desktop-build.yml)
+
+A web-based Texas Instruments BA II Plus financial calculator emulator — built as a zero-dependency PWA, packaged for iOS/Android via Capacitor and Desktop via Tauri.
 
 **Designed for CFA exam preparation.**
 
@@ -39,27 +45,28 @@ All 24 CFA exam tests pass, covering:
 ## Quick Start
 Open `index.html` in any modern browser. That's it — no installation, no server needed.
 
-## Deploy
+## Deploy (CI/CD)
 
-### Vercel (recommended)
-```bash
-vercel --prod
-```
+Builds are managed via **GitHub Actions** — see [`.github/workflows/`](.github/workflows/).
 
-### GitHub Pages
-```bash
-git init
-git add index.html
-git commit -m "Initial commit"
-gh repo create ba2-plus-calculator --public --source=.
-git push origin main
-# Then enable GitHub Pages in repo Settings → Pages → branch: main / (root)
-```
+| Workflow | Trigger | Artifact |
+|----------|---------|---------|
+| [CI](.github/workflows/ci.yml) | PR / push to main | Lint + 47 CFA test cases |
+| [Web Deploy](.github/workflows/web-deploy.yml) | Push to main | Builds with Vite → GitHub Pages |
+| [Android Build](.github/workflows/android-build.yml) | Push to main / manual | Debug APK artifact |
+| [iOS Build](.github/workflows/ios-build.yml) | Push to main / manual | Simulator build validation |
+| [Desktop Build](.github/workflows/desktop-build.yml) | Push to main / manual | macOS .dmg + Linux AppImage |
 
-### Local
+### Local Development
 ```bash
-python3 -m http.server 8765
-# Open http://localhost:8765
+# Web (Vite dev server)
+npm run dev:web
+
+# iOS/Android (Capacitor)
+npm run dev:mobile
+
+# Desktop (Tauri)
+cd apps/desktop && npx tauri dev
 ```
 
 ## Technical

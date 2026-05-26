@@ -1,0 +1,34 @@
+name: Android Build
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: 17
+      - run: npm ci
+      - name: Install mobile deps
+        run: cd apps/mobile && npm ci
+      - name: Build + sync Capacitor Android
+        run: npm run build:android
+      - name: Build APK (debug)
+        run: |
+          cd apps/mobile/android
+          ./gradlew assembleDebug
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ba2-plus-android-debug-apk
+          path: apps/mobile/android/app/build/outputs/apk/debug/*.apk
