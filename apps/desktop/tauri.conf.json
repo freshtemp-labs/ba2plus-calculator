@@ -8,7 +8,6 @@
     "frontendDist": "../web"
   },
   "app": {
-    "title": "BA II Plus Calculator",
     "windows": [
       {
         "title": "BA II Plus Calculator",

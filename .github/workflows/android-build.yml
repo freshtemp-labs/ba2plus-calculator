@@ -19,6 +19,8 @@ jobs:
           distribution: 'zulu'
           java-version: 17
       - run: npm ci
+      - name: Add Capacitor Android platform
+        run: cd apps/mobile && npx cap add android
       - name: Build + sync Capacitor Android
         run: npm run build:android
       - name: Build APK (debug)
