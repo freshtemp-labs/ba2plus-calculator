@@ -34,8 +34,6 @@ jobs:
             libjavascriptcoregtk-4.1-dev \
             libayatana-appindicator3-dev
       - run: npm ci
-      - name: Install desktop deps
-        run: cd apps/desktop && npm ci
       - name: Build Tauri desktop app
         run: npm run build:desktop
       - name: Upload macOS .dmg

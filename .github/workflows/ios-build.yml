@@ -15,8 +15,6 @@ jobs:
           node-version: 20
           cache: 'npm'
       - run: npm ci
-      - name: Install mobile deps
-        run: cd apps/mobile && npm ci
       - name: Build + sync Capacitor iOS
         run: npm run build:ios
       - name: Build iOS (simulator, unsigned)
