@@ -34,7 +34,7 @@ A web-based Texas Instruments BA II Plus financial calculator emulator — built
 - **Mode switch**: `Q`(Basic), `T`(TVM), `C`(CF), `B`(Bond), `D`(Depr), `I`(ICONV), `A`(Date), `S`(Stats)
 
 ### Accuracy Verified
-All 24 CFA exam tests pass, covering:
+All 82 CFA exam tests pass (100%), covering:
 - TVM (annuity, lump sum, loan amortization, rate of return)
 - NPV/IRR with cash flow frequencies
 - Bond pricing (annual, semi-annual, premium, discount, par)
@@ -51,7 +51,7 @@ Builds are managed via **GitHub Actions** — see [`.github/workflows/`](.github
 
 | Workflow | Trigger | Artifact |
 |----------|---------|---------|
-| [CI](.github/workflows/ci.yml) | PR / push to main | Lint + 47 CFA test cases |
+|| [CI](.github/workflows/ci.yml) | PR / push to main | Lint + 82 tests |
 | [Web Deploy](.github/workflows/web-deploy.yml) | Push to main | Builds with Vite → GitHub Pages |
 | [Android Build](.github/workflows/android-build.yml) | Push to main / manual | Debug APK artifact |
 | [iOS Build](.github/workflows/ios-build.yml) | Push to main / manual | Simulator build validation |
