@@ -2,253 +2,12 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BA II Plus 商业计算器</title>
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: 'SF Pro Display', -apple-system, 'Helvetica Neue', Arial, sans-serif;
-    background: #1a1a2e;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    padding: 20px;
-  }
-  .calculator {
-    width: 420px;
-    max-width: 100%;
-    background: linear-gradient(145deg, #2a2a3a, #1e1e2e);
-    border-radius: 24px;
-    padding: 24px 20px 28px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.06);
-  }
-  .badge {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-    padding: 0 4px;
-  }
-  .badge span {
-    color: #888;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-  }
-  .badge .btn-toggle {
-    background: none;
-    border: 1px solid #555;
-    color: #aaa;
-    font-size: 10px;
-    padding: 3px 10px;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .badge .btn-toggle:hover { background: rgba(255,215,0,0.15); border-color: #d4a017; color: #d4a017; }
-  .badge .btn-toggle.active { background: rgba(255,215,0,0.2); border-color: #d4a017; color: #d4a017; }
-
-  .display {
-    background: #0a0a0a;
-    border-radius: 12px;
-    padding: 16px 20px;
-    margin-bottom: 16px;
-    border: 2px solid #333;
-    box-shadow: inset 0 2px 8px rgba(0,0,0,0.5);
-    min-height: 100px;
-    position: relative;
-  }
-  .display .label-line {
-    color: #4a7;
-    font-size: 11px;
-    font-family: 'Courier New', monospace;
-    letter-spacing: 1px;
-    min-height: 16px;
-    margin-bottom: 4px;
-  }
-  .display .value-line {
-    color: #0f0;
-    font-size: 32px;
-    font-family: 'Courier New', monospace;
-    font-weight: bold;
-    text-align: right;
-    text-shadow: 0 0 8px rgba(0,255,0,0.3);
-    word-break: break-all;
-    min-height: 40px;
-    line-height: 1.2;
-    letter-spacing: 1px;
-  }
-  .display .sub-line {
-    color: #4a7;
-    font-size: 13px;
-    font-family: 'Courier New', monospace;
-    text-align: right;
-    min-height: 18px;
-    margin-top: 2px;
-  }
-  .display .mode-indicator {
-    position: absolute;
-    top: 8px;
-    right: 12px;
-    color: #555;
-    font-size: 10px;
-    font-family: monospace;
-    letter-spacing: 0.5px;
-  }
-
-  .mode-tabs {
-    display: flex;
-    gap: 2px;
-    margin-bottom: 12px;
-  }
-  .mode-tab {
-    flex: 1;
-    text-align: center;
-    padding: 6px 0;
-    font-size: 11px;
-    font-weight: 600;
-    color: #666;
-    background: rgba(255,255,255,0.03);
-    border: none;
-    cursor: pointer;
-    border-radius: 6px 6px 0 0;
-    transition: all 0.2s;
-    letter-spacing: 0.3px;
-  }
-  .mode-tab.active {
-    color: #d4a017;
-    background: rgba(255,215,0,0.08);
-    border-bottom: 2px solid #d4a017;
-  }
-  .mode-tab:hover { color: #aaa; }
-
-  .keys { display: none; }
-  .keys.active { display: block; }
-
-  .key-row {
-    display: flex;
-    gap: 6px;
-    margin-bottom: 6px;
-  }
-  .key {
-    flex: 1;
-    height: 44px;
-    border: none;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.12s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .key:active { transform: scale(0.95); }
-  .key .sub {
-    display: block;
-    font-size: 8px;
-    font-weight: 400;
-    opacity: 0.7;
-    position: absolute;
-    top: 3px;
-    left: 50%;
-    transform: translateX(-50%);
-    letter-spacing: 0.3px;
-  }
-  .key-num {
-    background: linear-gradient(180deg, #4a4a5a, #3a3a4a);
-    color: #e8e8f0;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1);
-    font-size: 16px;
-  }
-  .key-num:hover { background: linear-gradient(180deg, #555568, #444458); }
-  .key-op {
-    background: linear-gradient(180deg, #d4a017, #b8860b);
-    color: #fff;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,215,0,0.2);
-    font-size: 16px;
-  }
-  .key-op:hover { background: linear-gradient(180deg, #e0aa20, #c89210); }
-  .key-fn {
-    background: linear-gradient(180deg, #505065, #404055);
-    color: #c8c8e0;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.08);
-    font-size: 12px;
-  }
-  .key-fn:hover { background: linear-gradient(180deg, #5a5a70, #4a4a60); }
-  .key-fn2 {
-    background: linear-gradient(180deg, #3a3a50, #2e2e42);
-    color: #aaa;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05);
-    font-size: 12px;
-  }
-  .key-fn2:hover { background: linear-gradient(180deg, #444458, #38384c); }
-  .key-eq {
-    background: linear-gradient(180deg, #d4a017, #b8860b);
-    color: #fff;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,215,0,0.2);
-    font-size: 18px;
-  }
-  .key-eq:hover { background: linear-gradient(180deg, #e0aa20, #c89210); }
-  .key-ce {
-    background: linear-gradient(180deg, #8b3a3a, #6b2a2a);
-    color: #eee;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,100,100,0.1);
-    font-size: 12px;
-  }
-  .key-ce:hover { background: linear-gradient(180deg, #9a4444, #7a3434); }
-  .key-wide { flex: 2; }
-
-  .shortcut-panel {
-    background: rgba(0,0,0,0.3);
-    border-radius: 8px;
-    padding: 12px;
-    margin-top: 10px;
-    display: none;
-    border: 1px solid rgba(255,255,255,0.05);
-  }
-  .shortcut-panel.visible { display: block; }
-  .shortcut-panel h4 {
-    color: #d4a017;
-    font-size: 11px;
-    margin-bottom: 8px;
-    letter-spacing: 1px;
-  }
-  .shortcut-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4px 12px;
-  }
-  .shortcut-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 3px 0;
-    font-size: 11px;
-  }
-  .shortcut-item .sc-key {
-    background: rgba(255,255,255,0.08);
-    padding: 1px 8px;
-    border-radius: 3px;
-    color: #d4a017;
-    font-family: monospace;
-    font-size: 10px;
-    border: 1px solid rgba(255,215,0,0.2);
-  }
-  .shortcut-item .sc-label { color: #999; }
-
-  @media (max-width: 480px) {
-    .calculator { width: 100%; padding: 16px 12px 20px; border-radius: 16px; }
-    .key { height: 40px; font-size: 12px; }
-    .key .sub { font-size: 7px; }
-    .display .value-line { font-size: 26px; }
-  }
-</style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>BA II Plus Calculator</title>
+  <script type="module" crossorigin src="/ba2plus-calculator/assets/index-w0vxRGio.js"></script>
+  <link rel="stylesheet" crossorigin href="/ba2plus-calculator/assets/index-ChII7kTz.css">
 </head>
 <body>
 <div class="calculator" id="calc">
@@ -256,14 +15,12 @@
     <span>BA II Plus™</span>
     <button class="btn-toggle" id="shortcutToggle" onclick="toggleShortcuts()">⌨ 快捷键</button>
   </div>
-
   <div class="display">
     <div class="mode-indicator" id="modeIndicator">FIN</div>
     <div class="label-line" id="labelLine">&nbsp;</div>
     <div class="value-line" id="valueLine">0</div>
     <div class="sub-line" id="subLine">&nbsp;</div>
   </div>
-
   <div class="mode-tabs">
     <button class="mode-tab active" data-mode="basic" onclick="switchMode('basic')">标准</button>
     <button class="mode-tab" data-mode="tvm" onclick="switchMode('tvm')">TVM</button>
@@ -274,8 +31,7 @@
     <button class="mode-tab" data-mode="date" onclick="switchMode('date')">日期</button>
     <button class="mode-tab" data-mode="stat" onclick="switchMode('stat')">统计</button>
   </div>
-
-  <!-- ====== Basic Mode ====== -->
+  <!-- Basic Mode -->
   <div class="keys active" id="keys-basic">
     <div class="key-row">
       <button class="key key-fn2" onclick="press('CLEAR')">CE/C</button>
@@ -319,8 +75,7 @@
       <button class="key key-ce" onclick="press('QUIT')"><span class="sub">QUIT</span>OFF</button>
     </div>
   </div>
-
-  <!-- ====== TVM Mode ====== -->
+  <!-- TVM Mode -->
   <div class="keys" id="keys-tvm">
     <div class="key-row">
       <button class="key key-fn" onclick="pressTVM('N')">N <span style="font-size:10px;opacity:0.6">(期数)</span></button>
@@ -344,11 +99,10 @@
     <div class="key-row" style="margin-top:6px">
       <button class="key key-fn2" onclick="pressTVM('BGN_TOGGLE')" id="bgnBtn">END <span style="font-size:9px">(到期)</span></button>
       <button class="key key-fn2" onclick="pressTVM('P_YR')" id="pyrBtn">P/Y=12</button>
-      <button class="key key-fn2" onclick="pressTVM('BACK_BASIC')">← 返回</button>
+      <button class="key key-fn2" onclick="switchMode('basic')">← 返回</button>
     </div>
   </div>
-
-  <!-- ====== Cash Flow Mode ====== -->
+  <!-- Cash Flow Mode -->
   <div class="keys" id="keys-cashflow">
     <div class="key-row">
       <button class="key key-fn" onclick="pressCF('CF0')">CF₀ <span style="font-size:9px;opacity:0.6">(初始)</span></button>
@@ -362,15 +116,14 @@
       <button class="key key-eq" onclick="pressCF('IRR')">▶ IRR</button>
     </div>
     <div class="key-row">
-      <button class="key key-fn2" onclick="pressCF('RATE')">折现率 %</button>
-      <button class="key key-fn2" onclick="pressCF('BACK_BASIC')">← 返回</button>
+      <button class="key key-fn2" onclick="setCFRate()">折现率 %</button>
+      <button class="key key-fn2" onclick="switchMode('basic')">← 返回</button>
     </div>
     <div style="margin-top:6px;color:#888;font-size:11px;padding:4px;line-height:1.5">
       <span id="cfCount">0</span> 行  |  折现率: <span id="cfRate">10</span>%  |  总 <span id="cfTotalPeriods">0</span> 期
     </div>
   </div>
-
-  <!-- ====== Bond Mode ====== -->
+  <!-- Bond Mode -->
   <div class="keys" id="keys-bond">
     <div class="key-row">
       <button class="key key-fn" onclick="pressBond('SET_FV')">面值 <span style="font-size:9px;opacity:0.6">(默认1000)</span></button>
@@ -387,11 +140,10 @@
     </div>
     <div class="key-row">
       <button class="key key-fn2" onclick="pressBond('CLEAR')">清空</button>
-      <button class="key key-fn2" onclick="pressBond('BACK_BASIC')">← 返回</button>
+      <button class="key key-fn2" onclick="switchMode('basic')">← 返回</button>
     </div>
   </div>
-
-  <!-- ====== Depreciation Mode ====== -->
+  <!-- Depreciation Mode -->
   <div class="keys" id="keys-depr">
     <div class="key-row">
       <button class="key key-fn" onclick="pressDepr('COST')">成本</button>
@@ -406,11 +158,10 @@
     </div>
     <div class="key-row">
       <button class="key key-fn2" onclick="pressDepr('CLEAR')">清空</button>
-      <button class="key key-fn2" onclick="pressDepr('BACK_BASIC')">← 返回</button>
+      <button class="key key-fn2" onclick="switchMode('basic')">← 返回</button>
     </div>
   </div>
-
-  <!-- ====== Interest Conversion (ICONV) ====== -->
+  <!-- ICONV Mode -->
   <div class="keys" id="keys-iconv">
     <div class="key-row">
       <button class="key key-fn" onclick="pressIconv('NOM')">名义利率(NOM) %</button>
@@ -423,7 +174,7 @@
     </div>
     <div class="key-row">
       <button class="key key-fn2" onclick="pressIconv('CLEAR')">清空</button>
-      <button class="key key-fn2" onclick="pressIconv('BACK_BASIC')">← 返回</button>
+      <button class="key key-fn2" onclick="switchMode('basic')">← 返回</button>
     </div>
     <div style="margin-top:6px;color:#888;font-size:11px;padding:4px">
       <span>NOM=<span id="iconvNom">0</span>%</span> &nbsp;
@@ -431,12 +182,11 @@
       <span>C/Y=<span id="iconvCY">12</span></span>
     </div>
   </div>
-
-  <!-- ====== Date Mode ====== -->
+  <!-- Date Mode -->
   <div class="keys" id="keys-date">
     <div class="key-row">
-      <button class="key key-fn" onclick="pressDate('SET_DT1')">起始日期</button>
-      <button class="key key-fn" onclick="pressDate('SET_DT2')">结束日期</button>
+      <button class="key key-fn" onclick="setDate1()">起始日期</button>
+      <button class="key key-fn" onclick="setDate2()">结束日期</button>
       <button class="key key-fn2" onclick="pressDate('ACT_360')">ACT/360</button>
       <button class="key key-fn2" onclick="pressDate('ACT_365')">ACT/365</button>
     </div>
@@ -447,14 +197,13 @@
     </div>
     <div class="key-row">
       <button class="key key-fn2" onclick="pressDate('CLEAR')">清空</button>
-      <button class="key key-fn2" onclick="pressDate('BACK_BASIC')">← 返回</button>
+      <button class="key key-fn2" onclick="switchMode('basic')">← 返回</button>
     </div>
     <div style="margin-top:6px;color:#888;font-size:11px;padding:4px;line-height:1.5">
       <span id="dateDisplay">DT1=—  DT2=—  (ACT/360)</span>
     </div>
   </div>
-
-  <!-- ====== Statistics Mode ====== -->
+  <!-- Statistics Mode -->
   <div class="keys" id="keys-stat">
     <div class="key-row">
       <button class="key key-fn2" onclick="pressStat('1VAR')">1-VAR</button>
@@ -500,13 +249,12 @@
       <button class="key key-fn" onclick="pressStat('INTERCEPT')">b₀ <span style="font-size:9px;opacity:0.6">(截距)</span></button>
     </div>
     <div class="key-row">
-      <button class="key key-fn2" onclick="pressStat('BACK_BASIC')">← 返回</button>
+      <button class="key key-fn2" onclick="switchMode('basic')">← 返回</button>
     </div>
     <div style="margin-top:6px;color:#888;font-size:11px;">
       <span id="statCount">单变量: 0 点</span>
     </div>
   </div>
-
   <!-- Shortcuts Panel -->
   <div class="shortcut-panel" id="shortcutPanel">
     <h4>⌨ MacBook 快捷键映射</h4>
@@ -535,765 +283,6 @@
     </div>
   </div>
 </div>
-
-<script>
-// ========== Calculator Engine ==========
-const calc = {
-  display: '0',
-  buffer: '',
-  memory: 0,
-  op: null,
-  prev: null,
-  newNumber: true,
-  mode: 'basic',
-  label: ''
-};
-
-// TVM State
-const tvm = { N: 0, IY: 0, PV: 0, PMT: 0, FV: 0, bgn: false, pyr: 12 };
-
-// Returns { N_periods, i_rate } adjusted for P/Y
-function tvmAdj() {
-  let adjN = tvm.N * (tvm.pyr || 1);
-  let adjI = tvm.IY / 100 / (tvm.pyr || 1);
-  return { Np: adjN, ip: adjI };
-}
-
-// Depreciation State
-const deprState = { cost: 10000, salvage: 1000, life: 5, year: 1 };
-
-const $ = id => document.getElementById(id);
-function updateDisplay() {
-  $('#valueLine').textContent = calc.display;
-  $('#labelLine').textContent = calc.label || '\u00a0';
-  $('#subLine').textContent = '';
-}
-function updateTVMDisplay() {
-  let s = `N=${tvm.N}  I/Y=${tvm.IY}%  PV=${tvm.PV}  PMT=${tvm.PMT}  FV=${tvm.FV}`;
-  $('#labelLine').textContent = tvm.bgn ? 'TVM BGN' : 'TVM END';
-  $('#subLine').textContent = s;
-  $('#valueLine').textContent = calc.display;
-  $('#bgnBtn').innerHTML = tvm.bgn
-    ? 'BGN <span style="font-size:9px">(期初)</span>'
-    : 'END <span style="font-size:9px">(期末)</span>';
-  $('#pyrBtn').textContent = 'P/Y=' + tvm.pyr;
-}
-
-// ===== Basic Calculator =====
-function press(k) {
-  switch (k) {
-    case '0': case '1': case '2': case '3': case '4':
-    case '5': case '6': case '7': case '8': case '9': case '.':
-      if (calc.newNumber) { calc.buffer = ''; calc.newNumber = false; calc.label = ''; }
-      if (k === '.' && calc.buffer.includes('.')) break;
-      calc.buffer += k;
-      calc.display = calc.buffer;
-      break;
-    case 'ADD': doOp('+'); break;
-    case 'SUB': doOp('-'); break;
-    case 'MUL': doOp('*'); break;
-    case 'DIV': doOp('/'); break;
-    case 'ENTER':
-      if (calc.op && calc.prev !== null) {
-        let cur = parseFloat(calc.buffer || calc.display);
-        calc.display = String(compute(calc.prev, cur, calc.op));
-        calc.prev = null; calc.op = null; calc.buffer = ''; calc.newNumber = true;
-      }
-      break;
-    case 'BACK':
-      if (calc.buffer.length > 0) { calc.buffer = calc.buffer.slice(0, -1); calc.display = calc.buffer || '0'; }
-      break;
-    case 'CLEAR': calc.buffer = ''; calc.display = '0'; calc.prev = null; calc.op = null; calc.newNumber = true; calc.label = ''; break;
-    case 'QUIT': calc.display = '0'; calc.buffer = ''; calc.prev = null; calc.op = null; calc.newNumber = true; calc.label = ''; break;
-    case 'NEG':
-      if (calc.buffer.startsWith('-')) calc.buffer = calc.buffer.slice(1);
-      else if (calc.buffer !== '0') calc.buffer = '-' + calc.buffer;
-      calc.display = calc.buffer;
-      break;
-    case 'MEM': calc.memory = parseFloat(calc.buffer || '0'); calc.label = 'M→'; break;
-    case 'RCL': calc.display = String(calc.memory); calc.buffer = String(calc.memory); calc.newNumber = true; break;
-    default: break;
-  }
-  updateDisplay();
-}
-function doOp(op) {
-  let cur = parseFloat(calc.buffer || calc.display);
-  if (calc.prev !== null && calc.op) {
-    calc.display = String(compute(calc.prev, cur, calc.op));
-    calc.prev = parseFloat(calc.display);
-  } else {
-    calc.prev = cur;
-  }
-  calc.op = op; calc.buffer = ''; calc.newNumber = true;
-  calc.label = op === '+' ? '+' : op === '-' ? '−' : op === '*' ? '×' : '÷';
-  updateDisplay();
-}
-function compute(a, b, op) {
-  switch(op) {
-    case '+': return a + b;
-    case '-': return a - b;
-    case '*': return a * b;
-    case '/': return b !== 0 ? a / b : 'Error';
-    default: return b;
-  }
-}
-
-// ===== Mode Switching =====
-function switchMode(m) {
-  calc.mode = m;
-  document.querySelectorAll('.mode-tab').forEach(t => t.classList.toggle('active', t.dataset.mode === m));
-  document.querySelectorAll('.keys').forEach(k => k.classList.toggle('active', k.id === 'keys-' + m));
-  $('#modeIndicator').textContent =
-    m === 'basic' ? 'FIN' : m === 'tvm' ? 'TVM' : m === 'cashflow' ? 'CF' : m === 'bond' ? 'BOND' : m === 'depr' ? 'DEPR' : m === 'iconv' ? 'ICONV' : m === 'date' ? 'DATE' : 'STAT';
-  if (m === 'basic') { calc.label = ''; updateDisplay(); }
-  if (m === 'tvm') updateTVMDisplay();
-  if (m === 'cashflow') updateCFDisplay();
-  if (m === 'bond') updateBondDisplay();
-  if (m === 'depr') updateDeprDisplay();
-  if (m === 'iconv') updateIconvDisplay();
-  if (m === 'date') updateDateDisplay();
-  if (m === 'stat') updateStatDisplay();
-}
-
-// ===== TVM =====
-function pressTVM(k) {
-  let v = parseFloat(calc.buffer || calc.display);
-  if (k === 'N') { tvm.N = isNaN(v) ? 0 : v; calc.buffer = ''; calc.newNumber = true; }
-  else if (k === 'IY') { tvm.IY = isNaN(v) ? 0 : v; calc.buffer = ''; calc.newNumber = true; }
-  else if (k === 'PV') { tvm.PV = isNaN(v) ? 0 : -v; calc.buffer = ''; calc.newNumber = true; }
-  else if (k === 'PMT') { tvm.PMT = isNaN(v) ? 0 : v; calc.buffer = ''; calc.newNumber = true; }
-  else if (k === 'FV') { tvm.FV = isNaN(v) ? 0 : v; calc.buffer = ''; calc.newNumber = true; }
-  else if (k === 'CLR_TVM') { tvm.N=0; tvm.IY=0; tvm.PV=0; tvm.PMT=0; tvm.FV=0; calc.display='0'; }
-  else if (k === 'BGN_TOGGLE') { tvm.bgn = !tvm.bgn; $('#bgnBtn').innerHTML = tvm.bgn ? 'BGN <span style="font-size:9px">(期初)</span>' : 'END <span style="font-size:9px">(到期)</span>'; }
-  else if (k === 'P_YR') { tvm.pyr = tvm.pyr === 12 ? 1 : 12; }
-  else if (k === 'SOLVE_PV') { calc.display = fmt(solveTVM('PV')); }
-  else if (k === 'SOLVE_FV') { calc.display = fmt(solveTVM('FV')); }
-  else if (k === 'SOLVE_PMT') { calc.display = fmt(solveTVM('PMT')); }
-  else if (k === 'SOLVE_N') { calc.display = fmt(solveTVM('N')); }
-  else if (k === 'SOLVE_IY') { calc.display = fmt(solveTVM('IY')); }
-  else if (k === 'BACK_BASIC') { switchMode('basic'); return; }
-  updateTVMDisplay();
-}
-
-function solveTVM(target) {
-  let { Np, ip } = tvmAdj();
-  let N = Np, i = ip;
-  let { PV, PMT, FV } = tvm;
-  let bgnAdj = tvm.bgn ? (1 + i) : 1;
-
-  switch(target) {
-    case 'PV':
-      if (i === 0) return -(PMT * N + FV);
-      let pvFactor = (1 - Math.pow(1 + i, -N)) / i;
-      return -(PMT * pvFactor * bgnAdj + FV * Math.pow(1 + i, -N));
-    case 'FV':
-      if (i === 0) return -(PV + PMT * N);
-      return -(PV * Math.pow(1 + i, N) + PMT * bgnAdj * (Math.pow(1 + i, N) - 1) / i);
-    case 'PMT':
-      if (i === 0) return -(PV + FV) / (N * bgnAdj);
-      let pvif = (1 - Math.pow(1 + i, -N)) / i;
-      return -(PV + FV * Math.pow(1 + i, -N)) / (pvif * bgnAdj);
-    case 'N':
-      if (i === 0) return -(PV + FV) / (PMT || 1);
-      let num = PMT * bgnAdj * (1 + i) - FV * i;
-      let den = PMT * bgnAdj * (1 + i) + PV * i;
-      if (num / den <= 0) return NaN;
-      return Math.log(num / den) / Math.log(1 + i);
-    case 'IY': {
-      // Newton-Raphson on: PV + PMT*B*(1-(1+i)^-N)/i + FV*(1+i)^-N = 0
-      let x = 0.05;  // initial guess (5%)
-      let maxIter = 300;
-      for (let iter = 0; iter < maxIter; iter++) {
-        if (Math.abs(x) < 1e-15) {
-          // Use Taylor expansion near zero to avoid division by zero
-          let f = PV + PMT * bgnAdj * N * (1 - (N-1)*x/2 + (N-1)*(N-2)*x*x/6) + FV * (1 - N*x + N*(N-1)*x*x/2);
-          let fp = PMT * bgnAdj * (-N*(N-1)/2 + N*(N-1)*(N-2)*x/3) + FV * (-N + N*(N-1)*x);
-          if (Math.abs(f) < 1e-10) return x / (tvm.pyr || 1) * 100;
-          let dx = fp !== 0 ? -f / fp : 0.0001;
-          x += dx;
-        } else {
-          let onePx = 1 + x;
-          let onePxNegN = Math.pow(onePx, -N);
-          let f = PV + PMT * bgnAdj * (1 - onePxNegN) / x + FV * onePxNegN;
-          let fp = PMT * bgnAdj * (-N * onePxNegN * Math.log(onePx) / x - (1 - onePxNegN) / (x * x)) + FV * (-N) * onePxNegN / onePx;
-          if (Math.abs(f) < 1e-10) return x / (tvm.pyr || 1) * 100;
-          let dx = fp !== 0 ? -f / fp : 0.0001;
-          x += dx;
-        }
-        if (x < -0.9999) x = -0.5;
-        if (isNaN(x) || !isFinite(x)) return NaN;
-      }
-      return x / (tvm.pyr || 1) * 100;
-    }
-  }
-}
-// Cash Flow State — supports frequencies (F01, F02...)
-const cfState = { flows: [], rate: 10 }; // each flow: {amount, freq}
-
-function pressCF(k) {
-  let v = parseFloat(calc.buffer || '0');
-  if (k === 'CF0') {
-    if (cfState.flows.length === 0) cfState.flows[0] = { amount: isNaN(v) ? 0 : v, freq: 1 };
-    else cfState.flows[0].amount = isNaN(v) ? 0 : v;
-    calc.buffer = ''; calc.newNumber = true;
-  } else if (k === 'CF') {
-    cfState.flows.push({ amount: isNaN(v) ? 0 : v, freq: 1 });
-    calc.buffer = ''; calc.newNumber = true;
-  } else if (k === 'FREQ') {
-    if (cfState.flows.length > 1) {
-      let last = cfState.flows[cfState.flows.length - 1];
-      last.freq = Math.max(1, Math.floor(isNaN(v) ? 1 : v));
-      calc.display = 'F' + (cfState.flows.length - 1) + '=' + last.freq;
-      calc.buffer = ''; calc.newNumber = true;
-    }
-  } else if (k === 'CLEAR') { cfState.flows = []; cfState.rate = 10; }
-  else if (k === 'RATE') {
-    let r = parseFloat(prompt('折现率 (%)：', cfState.rate));
-    if (!isNaN(r)) cfState.rate = r;
-  }
-  else if (k === 'NPV') { calc.display = fmt(calcNPV()); }
-  else if (k === 'IRR') { calc.display = fmt(calcIRR()); }
-  else if (k === 'DELETE') {
-    if (cfState.flows.length > 1) cfState.flows.pop();
-  }
-  else if (k === 'BACK_BASIC') { switchMode('basic'); return; }
-  updateCFDisplay();
-}
-
-function calcNPV() {
-  let r = cfState.rate / 100;
-  let npv = 0, period = 0;
-  for (let i = 0; i < cfState.flows.length; i++) {
-    let f = cfState.flows[i];
-    let amt = f ? f.amount : 0;
-    let cnt = f ? (f.freq || 1) : 1;
-    for (let j = 0; j < cnt; j++) {
-      npv += amt / Math.pow(1 + r, period);
-      period++;
-    }
-  }
-  return npv;
-}
-
-function calcIRR() {
-  let x = 0.1;
-  for (let iter = 0; iter < 300; iter++) {
-    let f = 0, fp = 0, period = 0;
-    for (let i = 0; i < cfState.flows.length; i++) {
-      let f2 = cfState.flows[i];
-      let amt = f2 ? f2.amount : 0;
-      let cnt = f2 ? (f2.freq || 1) : 1;
-      for (let j = 0; j < cnt; j++) {
-        f += amt / Math.pow(1 + x, period);
-        fp += -period * amt / Math.pow(1 + x, period + 1);
-        period++;
-      }
-    }
-    if (Math.abs(f) < 1e-10) return x * 100;
-    if (fp === 0) break;
-    x -= f / fp;
-    if (x < -0.999) x = -0.5;
-    if (x > 9.99) x = 10;
-    if (isNaN(x) || !isFinite(x)) return NaN;
-  }
-  return x * 100;
-}
-
-function updateCFDisplay() {
-  let n = cfState.flows.length;
-  $('#cfCount').textContent = n > 0 ? n + ' 行' : '0 行';
-  $('#cfRate').textContent = cfState.rate;
-  let totalPeriods = 0;
-  cfState.flows.forEach(f => totalPeriods += (f ? f.freq || 1 : 0));
-  $('#cfTotalPeriods').textContent = totalPeriods;
-  let cfLines = cfState.flows.map((f, i) => {
-    if (!f) return `CF${i}=0`;
-    let s = `CF${i}=${f.amount}`;
-    if (i > 0 && f.freq > 1) s += `(×${f.freq})`;
-    return s;
-  });
-  $('#labelLine').textContent = '现金流';
-  $('#subLine').textContent = (cfLines.join('  ') || '(无数据)') + `  | ${totalPeriods} 期`;
-  $('#valueLine').textContent = calc.display;
-}
-
-// ===== Bond =====
-const bondState = { face: 1000, coupon: 5, price: null, yield: 5, years: 10, semiAnnual: false };
-
-function bondPrice(face, coupon, yld, years, semiAnnual) {
-  let periods = semiAnnual ? years * 2 : years;
-  let rate = semiAnnual ? yld / 200 : yld / 100;
-  let cpn = semiAnnual ? coupon / 200 * face : coupon / 100 * face;
-  let p = 0;
-  for (let t = 1; t <= periods; t++) {
-    p += cpn / Math.pow(1 + rate, t);
-  }
-  p += face / Math.pow(1 + rate, periods);
-  return p;
-}
-
-function pressBond(k) {
-  let v = parseFloat(calc.buffer || '0');
-  if (k === 'SET_FV') { bondState.face = isNaN(v) ? 1000 : v; calc.buffer = ''; calc.newNumber = true; }
-  else if (k === 'SET_CPN') { bondState.coupon = isNaN(v) ? 5 : v; calc.buffer = ''; calc.newNumber = true; }
-  else if (k === 'SET_YLD') { bondState.yield = isNaN(v) ? 5 : v; calc.buffer = ''; calc.newNumber = true; }
-  else if (k === 'SET_N') { bondState.years = isNaN(v) ? 10 : v; calc.buffer = ''; calc.newNumber = true; }
-  else if (k === 'SET_PRICE') { bondState.price = isNaN(v) ? null : v; calc.buffer = ''; calc.newNumber = true; }
-  else if (k === 'SET_PA') { bondState.semiAnnual = false; }
-  else if (k === 'SET_SA') { bondState.semiAnnual = true; }
-  else if (k === 'PRICE') {
-    let { face, coupon, yield: yld, years, semiAnnual } = bondState;
-    calc.display = fmt(bondPrice(face, coupon, yld, years, semiAnnual));
-  }
-  else if (k === 'YTM') {
-    let { face, coupon, price, years, semiAnnual } = bondState;
-    if (price === null || price === 0) { calc.display = 'Error: 请输入价格'; }
-    else {
-      let y = 0.05; // initial guess (5%)
-      for (let iter = 0; iter < 500; iter++) {
-        let periods = semiAnnual ? years * 2 : years;
-        let r = semiAnnual ? y / 2 : y;
-        let cpn = semiAnnual ? coupon / 200 * face : coupon / 100 * face;
-        let p = 0, dp = 0;
-        for (let t = 1; t <= periods; t++) {
-          let disc = Math.pow(1 + r, t);
-          p += cpn / disc;
-          dp += -t * cpn / (disc * (1 + r));
-        }
-        let discN = Math.pow(1 + r, periods);
-        p += face / discN;
-        dp += -periods * face / (discN * (1 + r));
-        // Chain rule: dp/dy = dp/dr * dr/dy
-        // For annual: r = y, dr/dy = 1
-        // For semi: r = y/2, dr/dy = 1/2
-        let dyRatio = semiAnnual ? 0.5 : 1;
-        dp *= dyRatio;
-        let f = p - price;
-        if (Math.abs(f) < 1e-8) { calc.display = fmt(y * 100); updateBondDisplay(); return; }
-        let dy = dp !== 0 ? -f / dp : 0.001;
-        if (Math.abs(dy) > 0.1) dy = Math.sign(dy) * 0.1;
-        y += dy;
-        if (y < 0.0001) y = 0.0001;
-        if (isNaN(y) || !isFinite(y)) break;
-      }
-      calc.display = (y >= 0 && y < 10) ? fmt(y * 100) + '(近似)' : 'Error';
-    }
-  }
-  else if (k === 'CLEAR') { Object.assign(bondState, {face:1000, coupon:5, price:null, yield:5, years:10, semiAnnual:false}); }
-  else if (k === 'BACK_BASIC') { switchMode('basic'); return; }
-  updateBondDisplay();
-}
-
-function updateBondDisplay() {
-  let b = bondState;
-  $('#labelLine').textContent = '债券';
-  let priceStr = b.price !== null ? `  价格=${b.price}` : '';
-  $('#subLine').textContent = `面值=${b.face}  票息=${b.coupon}%  收益率=${b.yield}%  期限=${b.years}年${priceStr}  ${b.semiAnnual ? '半年' : '每年'}付息`;
-  $('#valueLine').textContent = calc.display;
-}
-
-// ===== Depreciation =====
-function pressDepr(k) {
-  let v = parseFloat(calc.buffer || '0');
-  if (k === 'COST') { deprState.cost = isNaN(v) ? 10000 : v; calc.buffer = ''; calc.newNumber = true; }
-  else if (k === 'SALV') { deprState.salvage = isNaN(v) ? 1000 : v; calc.buffer = ''; calc.newNumber = true; }
-  else if (k === 'LIFE') { deprState.life = isNaN(v) ? 5 : v; calc.buffer = ''; calc.newNumber = true; }
-  else if (k === 'YEAR') { deprState.year = isNaN(v) ? 1 : v; calc.buffer = ''; calc.newNumber = true; }
-  else if (k === 'SL') {
-    let d = (deprState.cost - deprState.salvage) / deprState.life;
-    calc.display = fmt(d);
-  }
-  else if (k === 'SYD') {
-    let { cost, salvage, life, year } = deprState;
-    let remaining = life - year + 1;
-    let syd = remaining * (remaining + 1) / 2;
-    let totalSYD = life * (life + 1) / 2;
-    let d = (cost - salvage) * remaining / totalSYD;
-    calc.display = fmt(d);
-  }
-  else if (k === 'DB') {
-    let { cost, salvage, life, year } = deprState;
-    let rate = 2 / life; // double declining
-    let book = cost;
-    for (let y = 1; y < year; y++) book -= book * rate;
-    let d = book * rate;
-    let maxD = book - salvage;
-    if (d > maxD) d = maxD;
-    if (d < 0) d = 0;
-    calc.display = fmt(d);
-  }
-  else if (k === 'CLEAR') { Object.assign(deprState, {cost:10000, salvage:1000, life:5, year:1}); }
-  else if (k === 'BACK_BASIC') { switchMode('basic'); return; }
-  updateDeprDisplay();
-}
-
-function updateDeprDisplay() {
-  let d = deprState;
-  $('#labelLine').textContent = '折旧';
-  $('#subLine').textContent = `成本=${d.cost}  残值=${d.salvage}  年限=${d.life}  第${d.year}年`;
-  $('#valueLine').textContent = calc.display;
-}
-
-// ===== Interest Conversion (ICONV) =====
-const iconvState = { nom: 0, eff: 0, cy: 12 };
-
-function pressIconv(k) {
-  let v = parseFloat(calc.buffer || '0');
-  if (k === 'NOM') { iconvState.nom = isNaN(v) ? 0 : v; calc.buffer = ''; calc.newNumber = true; }
-  else if (k === 'EFF') { iconvState.eff = isNaN(v) ? 0 : v; calc.buffer = ''; calc.newNumber = true; }
-  else if (k === 'C_Y') { iconvState.cy = Math.max(1, Math.floor(isNaN(v) ? 12 : v)); calc.buffer = ''; calc.newNumber = true; }
-  else if (k === 'NOM_TO_EFF') {
-    let { nom, cy } = iconvState;
-    iconvState.eff = (Math.pow(1 + nom / 100 / cy, cy) - 1) * 100;
-    calc.display = fmt(iconvState.eff) + '%';
-  }
-  else if (k === 'EFF_TO_NOM') {
-    let { eff, cy } = iconvState;
-    iconvState.nom = (Math.pow(1 + eff / 100, 1 / cy) - 1) * cy * 100;
-    calc.display = fmt(iconvState.nom) + '%';
-  }
-  else if (k === 'CLEAR') { iconvState.nom = 0; iconvState.eff = 0; iconvState.cy = 12; }
-  else if (k === 'BACK_BASIC') { switchMode('basic'); return; }
-  updateIconvDisplay();
-}
-
-function updateIconvDisplay() {
-  $('#iconvNom').textContent = iconvState.nom;
-  $('#iconvEff').textContent = iconvState.eff;
-  $('#iconvCY').textContent = iconvState.cy;
-  $('#labelLine').textContent = '利率转换';
-  $('#subLine').textContent = `NOM=${iconvState.nom}%  EFF=${iconvState.eff}%  C/Y=${iconvState.cy}`;
-  $('#valueLine').textContent = calc.display;
-}
-
-// ===== Date =====
-const dateState = { dt1: null, dt2: null, convention: 'ACT/360' };
-
-function parseDate(str) {
-  // Accept YYYY-MM-DD or MM/DD/YYYY or YYYYMMDD
-  if (!str) return null;
-  let m = str.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})$/);
-  if (m) return new Date(+m[1], +m[2] - 1, +m[3]);
-  m = str.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$/);
-  if (m) return new Date(+m[3], +m[1] - 1, +m[2]);
-  m = str.match(/^(\d{4})(\d{2})(\d{2})$/);
-  if (m) return new Date(+m[1], +m[2] - 1, +m[3]);
-  return null;
-}
-
-function daysBetween(d1, d2) {
-  return Math.round((d2 - d1) / (24 * 60 * 60 * 1000));
-}
-
-function days30_360(d1, d2) {
-  // US/NASD 30/360: Bond market convention
-  let y1 = d1.getFullYear(), m1 = d1.getMonth() + 1, day1 = d1.getDate();
-  let y2 = d2.getFullYear(), m2 = d2.getMonth() + 1, day2 = d2.getDate();
-  if (day1 === 31) day1 = 30;
-  if (day2 === 31 && (day1 === 30 || day1 === 31)) day2 = 30;
-  return (y2 - y1) * 360 + (m2 - m1) * 30 + (day2 - day1);
-}
-
-function pressDate(k) {
-  if (k === 'SET_DT1') {
-    let inp = prompt('起始日期 (YYYY-MM-DD 或 MM/DD/YYYY):', dateState.dt1 || '');
-    if (inp) {
-      let d = parseDate(inp.trim());
-      if (d) { dateState.dt1 = d; calc.display = inp.trim(); }
-      else calc.display = '格式错误';
-    }
-  } else if (k === 'SET_DT2') {
-    let inp = prompt('结束日期 (YYYY-MM-DD 或 MM/DD/YYYY):', dateState.dt2 || '');
-    if (inp) {
-      let d = parseDate(inp.trim());
-      if (d) { dateState.dt2 = d; calc.display = inp.trim(); }
-      else calc.display = '格式错误';
-    }
-  } else if (k === 'ACT_360') { dateState.convention = 'ACT/360'; }
-  else if (k === 'ACT_365') { dateState.convention = 'ACT/365'; }
-  else if (k === 'ACT_ACT') { dateState.convention = 'ACT/ACT'; }
-  else if (k === '30_360') { dateState.convention = '30/360'; }
-  else if (k === 'DAYS') {
-    if (!dateState.dt1 || !dateState.dt2) {
-      calc.display = '请先输入两个日期';
-    } else {
-      let days;
-      switch (dateState.convention) {
-        case '30/360': days = days30_360(dateState.dt1, dateState.dt2); break;
-        case 'ACT/365': days = daysBetween(dateState.dt1, dateState.dt2); break;
-        case 'ACT/ACT': days = daysBetween(dateState.dt1, dateState.dt2); break;
-        default: days = daysBetween(dateState.dt1, dateState.dt2);
-      }
-      calc.display = days + ' 天';
-    }
-  } else if (k === 'CLEAR') { dateState.dt1 = null; dateState.dt2 = null; dateState.convention = 'ACT/360'; }
-  else if (k === 'BACK_BASIC') { switchMode('basic'); return; }
-  updateDateDisplay();
-}
-
-function fmtDate(d) {
-  if (!d) return '—';
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-}
-
-function updateDateDisplay() {
-  $('#labelLine').textContent = '日期';
-  $('#subLine').textContent = `DT1=${fmtDate(dateState.dt1)}  DT2=${fmtDate(dateState.dt2)}  (${dateState.convention})`;
-  $('#dateDisplay').innerHTML = `DT1=${fmtDate(dateState.dt1)}  DT2=${fmtDate(dateState.dt2)}  (${dateState.convention})`;
-  $('#valueLine').textContent = calc.display;
-}
-
-// ===== Statistics =====
-const statState = { data: [], data2: [], buffer: '', newEntry: true, mode: '1VAR' };
-
-function pressStat(k) {
-  if (k === '1VAR') { statState.mode = '1VAR'; statState.data2 = []; }
-  else if (k === '2VAR') { statState.mode = '2VAR'; calc.display = 'X+Y 双变量'; updateStatDisplay(); return; }
-  if (k >= '0' && k <= '9') {
-    if (statState.newEntry) { statState.buffer = ''; statState.newEntry = false; }
-    statState.buffer += k;
-    calc.display = statState.buffer;
-  } else if (k === '.') {
-    if (statState.newEntry) { statState.buffer = '0.'; statState.newEntry = false; }
-    else if (!statState.buffer.includes('.')) statState.buffer += '.';
-    calc.display = statState.buffer;
-  } else if (k === 'NEG') {
-    if (statState.buffer.startsWith('-')) statState.buffer = statState.buffer.slice(1);
-    else if (statState.buffer && statState.buffer !== '0') statState.buffer = '-' + statState.buffer;
-    calc.display = statState.buffer;
-  } else if (k === 'ENTER') {
-    let v = parseFloat(statState.buffer || '0');
-    if (!isNaN(v)) {
-      if (statState.mode === '2VAR' && statState.data.length > statState.data2.length) {
-        // Need to enter Y value for latest X
-        statState.data2.push(v);
-      } else {
-        statState.data.push(v);
-      }
-    }
-    statState.newEntry = true; statState.buffer = '';
-    calc.display = '✓ ' + v;
-  } else if (k === 'DEL') {
-    if (statState.data.length > 0) statState.data.pop();
-    if (statState.data2.length > statState.data.length) statState.data2.pop();
-    calc.display = 'deleted';
-  } else if (k === 'CLEAR') {
-    statState.data = []; statState.data2 = []; statState.buffer = ''; statState.newEntry = true; statState.mode = '1VAR';
-    calc.display = '0';
-  } else if (k === 'N') {
-    calc.display = String(statState.data.length);
-  } else if (k === 'MEAN') {
-    if (statState.data.length === 0) { calc.display = '0'; }
-    else { calc.display = fmt(statState.data.reduce((a,b)=>a+b,0) / statState.data.length); }
-  } else if (k === 'STD') { // Population std dev (σx)
-    if (statState.data.length < 1) { calc.display = '0'; }
-    else {
-      let mean = statState.data.reduce((a,b)=>a+b,0) / statState.data.length;
-      let v = statState.data.reduce((a,b)=>a+(b-mean)**2,0) / statState.data.length;
-      calc.display = fmt(Math.sqrt(v));
-    }
-  } else if (k === 'STD_S') { // Sample std dev (sx)
-    if (statState.data.length < 2) { calc.display = '0'; }
-    else {
-      let mean = statState.data.reduce((a,b)=>a+b,0) / statState.data.length;
-      let v = statState.data.reduce((a,b)=>a+(b-mean)**2,0) / (statState.data.length - 1);
-      calc.display = fmt(Math.sqrt(v));
-    }
-  } else if (k === 'VAR') { // Population variance (σ²)
-    if (statState.data.length < 1) { calc.display = '0'; }
-    else {
-      let mean = statState.data.reduce((a,b)=>a+b,0) / statState.data.length;
-      let v = statState.data.reduce((a,b)=>a+(b-mean)**2,0) / statState.data.length;
-      calc.display = fmt(v);
-    }
-  } else if (k === 'VAR_S') { // Sample variance (s²)
-    if (statState.data.length < 2) { calc.display = '0'; }
-    else {
-      let mean = statState.data.reduce((a,b)=>a+b,0) / statState.data.length;
-      let v = statState.data.reduce((a,b)=>a+(b-mean)**2,0) / (statState.data.length - 1);
-      calc.display = fmt(v);
-    }
-  } else if (k === 'SUM') {
-    calc.display = fmt(statState.data.reduce((a,b)=>a+b,0));
-  } else if (k === 'SUMSQ') {
-    calc.display = fmt(statState.data.reduce((a,b)=>a+b*b,0));
-  } else if (k === 'CORR') {
-    let n = Math.min(statState.data.length, statState.data2.length);
-    if (n < 2) { calc.display = '需要≥2组数据'; }
-    else {
-      let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0, sumY2 = 0;
-      for (let i = 0; i < n; i++) {
-        let x = statState.data[i], y = statState.data2[i];
-        sumX += x; sumY += y; sumXY += x*y; sumX2 += x*x; sumY2 += y*y;
-      }
-      let num = n * sumXY - sumX * sumY;
-      let den = Math.sqrt((n * sumX2 - sumX * sumX) * (n * sumY2 - sumY * sumY));
-      calc.display = fmt(den !== 0 ? num / den : 0);
-    }
-  } else if (k === 'SLOPE') {
-    let n = Math.min(statState.data.length, statState.data2.length);
-    if (n < 2) { calc.display = '需要≥2组数据'; }
-    else {
-      let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;
-      for (let i = 0; i < n; i++) {
-        let x = statState.data[i], y = statState.data2[i];
-        sumX += x; sumY += y; sumXY += x*y; sumX2 += x*x;
-      }
-      let num = n * sumXY - sumX * sumY;
-      let den = n * sumX2 - sumX * sumX;
-      calc.display = fmt(den !== 0 ? num / den : 0);
-    }
-  } else if (k === 'INTERCEPT') {
-    let n = Math.min(statState.data.length, statState.data2.length);
-    if (n < 2) { calc.display = '需要≥2组数据'; }
-    else {
-      let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;
-      for (let i = 0; i < n; i++) {
-        let x = statState.data[i], y = statState.data2[i];
-        sumX += x; sumY += y; sumXY += x*y; sumX2 += x*x;
-      }
-      let slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
-      let intercept = (sumY - slope * sumX) / n;
-      calc.display = fmt(intercept);
-    }
-  } else if (k === 'BACK_BASIC') { switchMode('basic'); return; }
-  updateStatDisplay();
-}
-
-function updateStatDisplay() {
-  let modeLabel = statState.mode === '1VAR' ? '单变量' : '双变量(X+Y)';
-  let n = statState.data.length;
-  let n2 = statState.data2.length;
-  $('#statCount').textContent = `${modeLabel}: ${n} 点` + (n2 > 0 ? ` (Y:${n2})` : '');
-  let modeColor = statState.mode === '1VAR' ? '#888' : '#d4a017';
-  $('#statMode').textContent = statState.mode;
-  if (statState.mode === '1VAR') {
-    let preview = statState.data.slice(-5).join(', ');
-    $('#labelLine').textContent = '统计(1-VAR)';
-    $('#subLine').textContent = preview ? `[${preview}${statState.data.length > 5 ? '...' : ''}]` : '(输入数据)';
-  } else {
-    let n3 = Math.min(n, n2);
-    let pairs = [];
-    for (let i = 0; i < Math.min(n3, 3); i++) pairs.push(`(${statState.data[i]},${statState.data2[i]})`);
-    $('#labelLine').textContent = '统计(2-VAR)';
-    $('#subLine').textContent = pairs.length > 0 ? pairs.join(' ') + (n3 > 3 ? '...' : '') : '(输入X, 再按ENTER输入Y)';
-  }
-  $('#valueLine').textContent = calc.display;
-}
-
-function fmt(n) {
-  if (n === undefined || n === null || isNaN(n)) return 'Error';
-  if (typeof n === 'string') return n;
-  if (!isFinite(n)) return '∞';
-  if (Math.abs(n) >= 1e9 || (Math.abs(n) < 1e-9 && n !== 0)) return n.toExponential(6);
-  if (Number.isInteger(n) && Math.abs(n) < 1e15) return String(n);
-  return String(parseFloat(n.toFixed(8)));
-}
-
-// ===== Keyboard Shortcuts =====
-document.addEventListener('keydown', function(e) {
-  let key = e.key;
-
-  // Numbers
-  if (/^[0-9]$/.test(key)) {
-    e.preventDefault();
-    if (calc.mode === 'basic') { press(key); return; }
-    if (calc.mode === 'stat') { pressStat(key); return; }
-    calc.buffer += key; calc.display = calc.buffer; calc.newNumber = false;
-    if (calc.mode === 'tvm') updateTVMDisplay();
-    return;
-  }
-
-  if (key === '.') {
-    e.preventDefault();
-    if (calc.mode === 'basic') { press('.'); return; }
-    if (calc.mode === 'stat') { pressStat('.'); return; }
-    if (!calc.buffer.includes('.')) calc.buffer += '.';
-    calc.display = calc.buffer;
-    return;
-  }
-
-  // Operations (basic mode only)
-  if (['+', '-', '*', '/'].includes(key)) {
-    e.preventDefault();
-    if (calc.mode === 'basic') {
-      if (key === '+') press('ADD');
-      else if (key === '-') press('SUB');
-      else if (key === '*') press('MUL');
-      else if (key === '/') press('DIV');
-    }
-    return;
-  }
-
-  if (key === 'Enter' || key === '=') {
-    e.preventDefault();
-    if (calc.mode === 'basic') { press('ENTER'); return; }
-    if (calc.mode === 'stat') { pressStat('ENTER'); return; }
-    return;
-  }
-
-  if (key === 'Backspace') {
-    e.preventDefault();
-    if (calc.mode === 'basic') { press('BACK'); return; }
-    if (calc.mode === 'stat') { pressStat('DEL'); return; }
-    if (calc.buffer.length > 0) { calc.buffer = calc.buffer.slice(0, -1); calc.display = calc.buffer || '0'; }
-    return;
-  }
-
-  if (key === 'Escape') {
-    e.preventDefault();
-    if (calc.mode === 'basic') press('CLEAR');
-    else if (calc.mode === 'stat') pressStat('CLEAR');
-    else { switchMode('basic'); }
-    return;
-  }
-
-  // Mode switches
-  if (key === 'q' || key === 'Q') { e.preventDefault(); switchMode('basic'); return; }
-  if (key === 't' || key === 'T') { e.preventDefault(); switchMode('tvm'); updateTVMDisplay(); return; }
-  if (key === 'c' || key === 'C') { e.preventDefault(); switchMode('cashflow'); updateCFDisplay(); return; }
-  if (key === 'b' || key === 'B') { e.preventDefault(); switchMode('bond'); updateBondDisplay(); return; }
-  if (key === 'd' || key === 'D') { e.preventDefault(); switchMode('depr'); updateDeprDisplay(); return; }
-  if (key === 'i' || key === 'I') { e.preventDefault(); switchMode('iconv'); updateIconvDisplay(); return; }
-  if (key === 'a' || key === 'A') { e.preventDefault(); switchMode('date'); updateDateDisplay(); return; }
-  if (key === 's' || key === 'S') { e.preventDefault(); switchMode('stat'); updateStatDisplay(); return; }
-
-  // Shift + letter for TVM solves
-  if (e.shiftKey) {
-    if (calc.mode === 'tvm') {
-      if (key === 'P') { e.preventDefault(); pressTVM('SOLVE_PV'); return; }
-      if (key === 'F') { e.preventDefault(); pressTVM('SOLVE_FV'); return; }
-      if (key === 'M') { e.preventDefault(); pressTVM('SOLVE_PMT'); return; }
-      if (key === 'R') { e.preventDefault(); pressTVM('SOLVE_N'); return; }
-      if (key === 'I') { e.preventDefault(); pressTVM('SOLVE_IY'); return; }
-    }
-    return;
-  }
-
-  // Negate
-  if (key === 'n' || key === 'N') {
-    e.preventDefault();
-    if (calc.mode === 'basic') press('NEG');
-    return;
-  }
-
-  // BGN toggle
-  if (key === 'g' || key === 'G') {
-    e.preventDefault();
-    if (calc.mode === 'tvm') pressTVM('BGN_TOGGLE');
-    return;
-  }
-});
-
-// ===== Shortcut Panel Toggle =====
-function toggleShortcuts() {
-  let p = $('#shortcutPanel');
-  p.classList.toggle('visible');
-  $('#shortcutToggle').classList.toggle('active');
-}
-
-// Init
-updateDisplay();
-</script>
 </body>
 </html>
+<!-- Web Deploy trigger: e57daa6 -->
